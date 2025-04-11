@@ -113,7 +113,7 @@ public sealed class Gathering : Entity
         return invitation;
     }
 
-    public Attendee? AcceptInvitation(Invitation invitation)
+    public Result<Attendee> AcceptInvitation(Invitation invitation)
     {
         var expired = (Type == GatheringType.WithFixedNumberOfAttendees &&
                        NumberOfAttendees == MaximumNumberOfAttendees) ||
@@ -123,7 +123,7 @@ public sealed class Gathering : Entity
         {
             invitation.Expire();
 
-            return null;
+            return Result.Failure<Attendee>(DomainError.Gathering.AttendeeNotExists);
         }
 
         var attendee = invitation.Accept();
